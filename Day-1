@@ -1,0 +1,92 @@
+problem-1 : https://leetcode.com/problems/high-access-employees/description/
+Code:-
+class Solution {
+public:
+     static bool cmp(vector<string >&a , vector<string >&b){
+         if(a[0] == b[0]) return a[1]<b[1];
+         return a[0]<b[0];
+     }
+    vector<string> findHighAccessEmployees(vector<vector<string>>& access_times) {
+         vector<string> res;
+        sort(access_times.begin() , access_times.end() , cmp);
+        
+        unordered_map<string , vector<int>>mym;
+        for(int i = 0 ; i<access_times.size() ; i++){
+            mym[access_times[i][0]].push_back(stoi(access_times[i][1]));
+        }
+        unordered_set<string> ans;
+       for(int i = 0 ; i<access_times.size() ; i++)
+       {
+           int count = 1;
+           for(int j = i+1 ; j<access_times.size()&&access_times[i][0] == access_times[j][0]; j++)
+           {    
+                if((stoi(access_times[i][1])-stoi(access_times[j][1]))>-100)
+                {count++;}
+           }
+           if(count>=3) ans.insert(access_times[i][0]);
+       }
+        for(auto x : ans) res.push_back(x);
+        return res;
+    }
+};
+Problem-2 : https://leetcode.com/problems/query-kth-smallest-trimmed-number/description/
+Code :- 
+class Solution {
+public:
+
+    vector<int> smallestTrimmedNumbers(vector<string>& nums, vector<vector<int>>& queries) {
+        vector<int> ans;
+        for(int i = 0 ; i<queries.size() ; i++)
+        {
+          vector<pair<string , int>> myvec(nums.size());
+        for(int j= 0 ; j<nums.size() ; j++)
+       { string temp;
+     //cout<<nums[j].size()-queries[i][1]<<endl;
+           for(int k = nums[j].size()-queries[i][1] ; k<nums[j].size() ; k++)
+        {
+             temp.push_back(nums[j][k]);
+        }
+         myvec[j] = {temp , j};
+       }
+     
+           sort(myvec.begin() , myvec.end());
+       
+          ans.push_back(myvec[queries[i][0]-1].second);
+
+        }
+        
+        return ans;
+    }
+};
+Problem-3:-https://leetcode.com/problems/combination-sum-iii/description/
+Code:- 
+class Solution {
+public:
+    
+   void get(vector<vector<int>>& ans, vector<int>& output, int i, int k, int n){
+        //base case
+        if(output.size() == k && n == 0){
+            ans.push_back(output);
+            return;
+        }
+        if(output.size() == k && n != 0){
+            return;
+        }
+
+        //recursive relation
+        for(int x=i; x<=9; x++){
+            output.push_back(x);
+            get(ans, output, x+1, k, n-x);
+            //backtracking
+            output.pop_back();
+        }
+    }
+
+    vector<vector<int>> combinationSum3(int k, int n) {
+        if(k>n) return {};
+        vector<int>temp;
+        vector<vector<int>> ans;
+        get(ans,temp,1,k,n);
+        return ans;
+    }
+};
